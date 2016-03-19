@@ -13,6 +13,7 @@ static void assistant_close (GtkAssistant*, gpointer);
 //callback functions for page 5
 static void delay(int x);
 static  void startfunc(GtkWidget*,GtkAssistant*);
+static void clearAfterTime(GtkWidget*,GtkAssistant*);//function to clear the content of the entry after a particular time elapse depending on the level
 static void sendfunc(GtkWidget *button,GtkAssistant *assistant);
 static void clearfunc(GtkWidget *button,GtkAssistant *assistant);
 static void activate_display(GtkEditable *entry,GtkAssistant *assistant);
@@ -124,6 +125,7 @@ gtk_box_pack_start (GTK_BOX (vbox5), hbox4_5, TRUE, FALSE, 2);
 
 gtk_container_add(GTK_CONTAINER(page[4].widget),vbox5);
 g_signal_connect(G_OBJECT(start),"clicked",G_CALLBACK(startfunc),(gpointer) assistant);
+_signal_connect(G_OBJECT(start),"clicked",G_CALLBACK(clearAfterTime),(gpointer) assistant);
 g_signal_connect(G_OBJECT(send),"clicked",G_CALLBACK(sendfunc),(gpointer) assistant);
 g_signal_connect(G_OBJECT(clear),"clicked",G_CALLBACK(clearfunc),(gpointer) assistant);
 g_signal_connect(G_OBJECT(display),"activate",G_CALLBACK(activate_display),(gpointer) assistant);
@@ -268,6 +270,25 @@ static void delay(int x){
             stop=time(0);
     }
     while(stop-start!=x);
+}
+
+static void clearAfterTime(GtkWidget*,GtkAssistant*){
+	switch(level_flag){
+		case 1:
+			delay(5);
+			gtk_entry_set_text(GTK_ENTRY(display),"");
+		break;		
+		case 2: 
+			delay(3);
+			gtk_entry_set_text(GTK_ENTRY(display),"");
+		break;
+		case 3: 
+			delay(2);
+			gtk_entry_set_text(GTK_ENTRY(display),"");
+		break;
+	default gtk_entry_set_text(GTK_ENTRY(display),"improper privilage to this level");
+	break;
+	}
 }
 static void sendfunc(GtkWidget *button,GtkAssistant *assistant){
 const char *get_input1,*get_input2,*get_input3;
